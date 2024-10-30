@@ -247,32 +247,32 @@
         }
 
         async function actFunction() {
-            const eggCount = parseInt(document.getElementById('eggCount').value);
-            const messageBox = document.getElementById('message-box');
-            
-            if (eggCount > pop) {
-                messageBox.innerText = "POP Error: amount exceeds population!";
-                return;
-            }
-
-            try {
-                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                const batch = new web3.BatchRequest();
-                for (let i = 0; i < eggCount; i++) {
-                    batch.add(contract.methods.act().send.request({
-                        from: accounts[0],
-                        value: web3.utils.toWei('1', 'ether')
-                    }, (error, transactionHash) => {
-                        if (error) console.error(error);
-                    }));
-                }
-                batch.execute();
-                messageBox.innerText = `${eggCount} eggs purchased successfully!`;
-            } catch (error) {
-                console.error('Error executing act function:', error);
-                messageBox.innerText = 'Error executing act function. Check console for details.';
-            }
-        }
+	    const eggCount = parseInt(document.getElementById('eggCount').value);
+	    const messageBox = document.getElementById('message-box');
+	    
+	    if (eggCount > pop) {
+	        messageBox.innerText = "POP Error: amount exceeds population!";
+	        return;
+	    }
+	
+	    try {
+	        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+	        const batch = new web3.BatchRequest();
+	        for (let i = 0; i < eggCount; i++) {
+	            batch.add(contract.methods.act().send.request({
+	                from: accounts[0],
+	                value: web3.utils.toWei('1', 'ether')
+	            }, (error, transactionHash) => {
+	                if (error) console.error(`Error in transaction ${i}:`, error);
+	            }));
+	        }
+	        batch.execute();
+	        messageBox.innerText = `${eggCount} eggs purchased successfully!`;
+	    } catch (error) {
+	        console.error('Error executing act function:', error);
+	        messageBox.innerText = 'Error executing act function. Check console for details.';
+	    }
+	}
 
         document.getElementById('refresh').addEventListener('click', build);
         document.getElementById('actButton').addEventListener('click', actFunction);
