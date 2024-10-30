@@ -257,21 +257,20 @@
 
             try {
                 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                for (let i = 0; i < eggCount; i++) {
-                    const transactionParameters = {
-                        to: contractAddress,
-                        from: accounts[0],
-                        value: web3.utils.toHex(web3.utils.toWei('1', 'ether')),
-                        data: contract.methods.act().encodeABI()
-                    };
-                    await ethereum.request({
-                        method: 'eth_sendTransaction',
-                        params: [transactionParameters]
-                    });
-                }
+                const transactionParameters = {
+                    to: contractAddress,
+                    from: accounts[0],
+                    value: web3.utils.toHex(web3.utils.toWei((1 * eggCount).toString(), 'ether')),
+                    data: contract.methods.act().encodeABI()
+                };
+                await ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters]
+                });
                 messageBox.innerText = `${eggCount} eggs purchased successfully!`;
             } catch (error) {
                 console.error('Error executing act function:', error);
+                messageBox.innerText = 'Error executing act function. Check console for details.';
             }
         }
 
